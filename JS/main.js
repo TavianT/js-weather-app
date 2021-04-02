@@ -13,6 +13,7 @@ class App {
             document.getElementById("temp").innerText = Math.floor(Number(currentWeather.main.temp)) + '\xB0 Celsius';
             document.getElementById("humidity").innerText = "Humidity: " + currentWeather.main.humidity
             document.getElementById("wind").innerText = "Wind: " + Number(currentWeather.wind.speed * msToMph).toFixed(2) + " mph";
+            document.getElementById("currentWeatherContainer").style.display = "block"
         }
     }
 

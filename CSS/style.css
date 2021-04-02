@@ -1,0 +1,49 @@
+@font-face{
+    font-family: LibreFranklin;
+    src: url(LibreFranklin[wght].ttf);
+}
+body {
+    background-color: #B4F8C8;
+    font-family: LibreFranklin;
+}
+header {
+    padding: 1rem;
+    text-align: center;
+}
+#searchContainer{
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 50px;
+}
+#currentWeatherContainer{
+    padding: 1rem;
+    text-align: center;
+    display: none;
+    font-size: x-large;
+    border: medium;
+    border-color: #FBC858;
+    border-style: solid;
+    border-width: 5px;
+    width: 300px;
+    margin: auto;
+    border-radius: 10px;
+}
+
+input[type=text]{
+    border: none;
+    border-bottom: 2px solid#FBC858;
+    background-color: #B4F8C8;
+    padding-bottom: 5px;
+    font-size: x-large;
+}
+
+input[type=text]:focus{
+    border: none;
+    border-bottom: 2px solid black;
+    outline:none;
+}
+input[type=submit]{
+    background-color: #FBC858;
+    font-size: medium;
+    margin-left: 10px;
+}
