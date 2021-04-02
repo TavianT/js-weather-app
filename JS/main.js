@@ -1,26 +1,31 @@
 "use strict";
 class App {
     constructor() {}
-    start(){
+    async start(){
         if (navigator.geolocation) {
-            let currentWeather = navigator.geolocation.getCurrentPosition(this.getWeatherFromCoords, this.showError);
+            let currentLocation = await this.getPosition();
+            let currentWeather = await this.getWeatherFromCoords(currentLocation);
             console.log(currentWeather);
-            document.getElementById("weather").innerText = Math.floor(Number(currentWeather));
+            const msToMph = 2.237;
+            document.getElementById("location").innerText = currentWeather.name;
+            document.getElementById("weather").innerText = currentWeather.weather[0].description
+            document.getElementById("icon").src =  "http://openweathermap.org/img/wn/" + currentWeather.weather[0].icon + "@2x.png"
+            document.getElementById("temp").innerText = Math.floor(Number(currentWeather.main.temp)) + '\xB0 Celsius';
+            document.getElementById("humidity").innerText = "Humidity: " + currentWeather.main.humidity
+            document.getElementById("wind").innerText = "Wind: " + Number(currentWeather.wind.speed * msToMph).toFixed(2) + " mph";
         }
+    }
+
+    getPosition() {
+        return new Promise((res, rej) => {
+            navigator.geolocation.getCurrentPosition(res, rej)
+        });
     }
     
     getWeatherFromCoords(position) {
-        let res = 0;
         let req = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=8f5e7b12e6cc251e84a440925910f743&units=metric";
-        axios.get(req)
-        .then(function (response){
-            console.log(response.data)
-            res = response.data.main.temp;
-        })
-        .catch(function(error){
-            console.error(error);
-        })
-        return res;
+        return axios.get(req).then(response => response.data)
+
     }
     showError(error) {
         switch(error.code) {
