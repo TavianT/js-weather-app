@@ -18,15 +18,17 @@
             <input type="submit" value="submit">
         </form>
     </section>
-    <section id="currentWeatherContainer">
+    <section id="currentWeatherContainer" class="weatherContainer">
         <h4 id="location">Location</h4>
         <h5 id="weather">Weather</h5>
         <img src="" alt="Weather Icon" id="icon">
         <p id="temp">Temperature</p>
         <p id="humidity">Humidity</p>
         <p id="wind">Wind</p>
-    <section>
-
+    </section>
+    <section id="searchedWeatherContainer" class="weatherContainer">
+        <ul id="fiveDayWeatherList">
+        </ul>
     </section>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="JS/main.js"></script>

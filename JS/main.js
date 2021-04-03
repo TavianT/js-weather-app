@@ -1,6 +1,14 @@
 "use strict";
 class App {
-    constructor() {}
+    constructor() {
+        this.searchBar = document.getElementById("searchBar");
+        this.weatherList = document.getElementById("fiveDayWeatherList");
+        this.searchStr = "";
+        this.searchBar.addEventListener('keyup', (e) =>{
+            this.searchStr = e.target.value;
+            console.log(this.searchStr);
+        });
+    }
     async start(){
         if (navigator.geolocation) {
             let currentLocation = await this.getPosition();
@@ -44,6 +52,8 @@ class App {
               break;
           }
     }
+
+
 };
 
 let app = new App();
