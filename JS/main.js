@@ -3,8 +3,9 @@ class App {
     constructor() {
         this.searchBar = document.getElementById("searchBar");
         this.weatherList = document.getElementById("fiveDayWeatherList");
+        this.searchForm = document.getElementById("searchForm");
         this.searchStr = "";
-        this.searchBar.addEventListener('keyup', (e) =>{
+        this.searchBar.addEventListener("keyup", (e) =>{
             this.searchStr = e.target.value;
             console.log(this.searchStr);
         });
@@ -32,7 +33,7 @@ class App {
     }
     
     getWeatherFromCoords(position) {
-        let req = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=8f5e7b12e6cc251e84a440925910f743&units=metric";
+        let req = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid="+config.openweathermap+"&units=metric";
         return axios.get(req).then(response => response.data)
 
     }
@@ -53,6 +54,20 @@ class App {
           }
     }
 
+    async submitSearch() {
+        let formattedSearch = this.formatSearch(this.searchStr);
+        let res = await this.getCoordsFromLocation(formattedSearch)
+        console.log(res);
+    }
+
+    formatSearch(str) {
+        return encodeURIComponent(str.trim());
+    }
+
+    getCoordsFromLocation(location) {
+        let req = "https://maps.googleapis.com/maps/api/geocode/json?address="+location+"&key="+config.google;
+        return axios.get(req).then(response => response.data)
+    }
 
 };
 

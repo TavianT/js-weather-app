@@ -13,9 +13,9 @@
         <h5>By Tavian Taylor</h5>
     </header>
     <section id="searchContainer">
-        <form action="#" id="searchFrom">
+        <form action="#" id="searchForm">
             <input type="text" name="searchBar" id="searchBar" placeholder="Birmingham, UK">
-            <input type="submit" value="submit">
+            <input type="submit" value="submit" onclick="app.submitSearch(); return false;">
         </form>
     </section>
     <section id="currentWeatherContainer" class="weatherContainer">
@@ -31,6 +31,7 @@
         </ul>
     </section>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="JS/config.js"></script>
     <script src="JS/main.js"></script>
 </body>
 </html>
