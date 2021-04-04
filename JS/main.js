@@ -1,20 +1,29 @@
 "use strict";
+class WeatherCall{
+    constructor(api,lat,long,exclude="current,minutely,hourly,alerts") {
+        this.api = api;
+        this.lat = lat;
+        this.long = long;
+        this.exclude = exclude;
+    }
+}
 class App {
     constructor() {
         this.searchBar = document.getElementById("searchBar");
         this.weatherList = document.getElementById("fiveDayWeatherList");
         this.searchForm = document.getElementById("searchForm");
+        this.currentWeatherContainerDisplay =  document.getElementById("currentWeatherContainer");
+        this.searchedWeatherContainerDisplay = document.getElementById("searchedWeatherContainer");
         this.searchStr = "";
         this.searchBar.addEventListener("keyup", (e) =>{
             this.searchStr = e.target.value;
-            console.log(this.searchStr);
         });
     }
     async start(){
         if (navigator.geolocation) {
             let currentLocation = await this.getPosition();
-            let currentWeather = await this.getWeatherFromCoords(currentLocation);
-            console.log(currentWeather);
+            let curWeatherCall = new WeatherCall("weather",currentLocation.coords.latitude,currentLocation.coords.longitude);
+            let currentWeather = await this.getWeatherFromCoords(curWeatherCall, false);
             const msToMph = 2.237;
             document.getElementById("location").innerText = currentWeather.name;
             document.getElementById("weather").innerText = currentWeather.weather[0].description
@@ -22,7 +31,7 @@ class App {
             document.getElementById("temp").innerText = Math.floor(Number(currentWeather.main.temp)) + '\xB0 Celsius';
             document.getElementById("humidity").innerText = "Humidity: " + currentWeather.main.humidity
             document.getElementById("wind").innerText = "Wind: " + Number(currentWeather.wind.speed * msToMph).toFixed(2) + " mph";
-            document.getElementById("currentWeatherContainer").style.display = "block"
+            this.currentWeatherContainerDisplay.style.display = "block";
         }
     }
 
@@ -32,8 +41,11 @@ class App {
         });
     }
     
-    getWeatherFromCoords(position) {
-        let req = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid="+config.openweathermap+"&units=metric";
+    getWeatherFromCoords(weatherCall, exclude) {
+        let req = "http://api.openweathermap.org/data/2.5/"+ weatherCall.api + "?lat=" + weatherCall.lat + "&lon=" + weatherCall.long + "&appid=" + config.openweathermap + "&units=metric";
+        if (exclude) {
+            req += "&exclude=" + weatherCall.exclude;
+        }
         return axios.get(req).then(response => response.data)
 
     }
@@ -56,8 +68,14 @@ class App {
 
     async submitSearch() {
         let formattedSearch = this.formatSearch(this.searchStr);
-        let res = await this.getCoordsFromLocation(formattedSearch)
+        let res = await this.getCoordsFromLocation(formattedSearch);
         console.log(res);
+        //TODO: Get location name from res here anmd pass to update display
+        let formattedLocation = res.results[0].formatted_address;
+        let oneWeatherCall = new WeatherCall("onecall", res.results[0].geometry.location.lat, res.results[0].geometry.location.lng);
+        let weather = await this.getWeatherFromCoords(oneWeatherCall, true);
+        //console.log(weather);
+        this.updateDisplayWithWeather(weather.daily, formattedLocation);
     }
 
     formatSearch(str) {
@@ -67,6 +85,28 @@ class App {
     getCoordsFromLocation(location) {
         let req = "https://maps.googleapis.com/maps/api/geocode/json?address="+location+"&key="+config.google;
         return axios.get(req).then(response => response.data)
+    }
+
+    updateDisplayWithWeather(dailyWeather, location) {
+        this.currentWeatherContainerDisplay.style.display = "none";
+        document.getElementById("searchContainer").style.marginBottom = "10px"
+        this.updateHeader(location);
+        for (const day of dailyWeather) {
+            console.log(day);
+        }
+    }
+
+    updateHeader(location){
+        let oldLocation = document.getElementById("searchedLocation");
+        if (typeof(oldLocation) != "undefined" && oldLocation != null) {
+            oldLocation.remove();
+        }
+        let locationHeader = document.createElement("h4");
+        locationHeader.appendChild(document.createTextNode(location));
+        locationHeader.style.textAlign = "center"
+        locationHeader.style.fontSize = "x-large";
+        locationHeader.setAttribute("id", "searchedLocation");
+        document.body.insertBefore(locationHeader, this.searchedWeatherContainerDisplay);
     }
 
 };

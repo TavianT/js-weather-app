@@ -13,20 +13,27 @@ header {
 #searchContainer{
     padding: 1rem;
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
-.weatherContainer{
+#currentWeatherContainer{
     padding: 1rem;
-    text-align: center;
-    display: none;
-    font-size: x-large;
     border: medium;
     border-color: #FBC858;
     border-style: solid;
     border-width: 5px;
     width: 300px;
-    margin: auto;
     border-radius: 10px;
+    display: none;
+}
+
+#searchedWeatherContainer {
+    display: flex;
+}
+
+.weatherContainer {
+    text-align: center;
+    font-size: x-large;
+    margin: auto;
 }
 
 input[type=text]{
