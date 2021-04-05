@@ -88,11 +88,27 @@ class App {
     }
 
     updateDisplayWithWeather(dailyWeather, location) {
+        let i = 0;
         this.currentWeatherContainerDisplay.style.display = "none";
         document.getElementById("searchContainer").style.marginBottom = "10px"
+        this.searchedWeatherContainerDisplay.innerHTML = '';
         this.updateHeader(location);
         for (const day of dailyWeather) {
+            if (i == dailyWeather.length - 1) {
+                break;
+            }
+            i++;
             console.log(day);
+            let dateString = this.getDate(day.dt);
+            let div = document.createElement("div");
+            div.appendChild(this.createWeatherElement("h4", dateString));
+            div.appendChild(this.createWeatherElement("h5", day.weather[0].description));
+            div.appendChild(this.createWeatherImg(day.weather[0].icon));
+            div.appendChild(this.createWeatherElement("p", day.temp.day + '\xB0 Celsius'));
+            div.appendChild(this.createWeatherElement("p", "Humidity: " + day.humidity));
+            div.appendChild(this.createWeatherElement("p", day.wind_speed + " mph"));
+            //div.appendChild(this.createWeatherElement(day))
+            this.searchedWeatherContainerDisplay.appendChild(div);
         }
     }
 
@@ -107,6 +123,43 @@ class App {
         locationHeader.style.fontSize = "x-large";
         locationHeader.setAttribute("id", "searchedLocation");
         document.body.insertBefore(locationHeader, this.searchedWeatherContainerDisplay);
+    }
+
+    createWeatherElement(tag, data) {
+        let element = document.createElement(tag);
+        element.appendChild(document.createTextNode(data));
+        return element;
+    }
+    createWeatherImg(data) {
+        let element = document.createElement("img");
+        element.src = "http://openweathermap.org/img/wn/" + data + "@2x.png";
+        return element;
+    }
+    getDate(unixDate) {
+        let date = new Date(unixDate * 1000); //JS works in ms
+        let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        let day = date.getDate()
+        let ordinal = "" //either st, nd, rd, th
+        switch (day) {
+            case 1:
+            case 21:
+            case 31:
+                ordinal = "st";
+                break;
+            case 2:
+            case 22:
+                ordinal = "nd";
+            case 3:
+            case 23:
+                ordinal = "rd";
+            default:
+                ordinal = "th";
+                break;
+        }
+        console.log("day: " + day);
+        let month = months[date.getMonth()];
+        console.log("month: " + month);
+        return String(day + ordinal + " " + month);
     }
 
 };

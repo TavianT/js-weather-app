@@ -28,6 +28,15 @@ header {
 
 #searchedWeatherContainer {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#searchedWeatherContainer div {
+    /*margin-right: 10px;*/
+    flex: 1;
+    flex-basis: 12%;
+    /*border-right: 3px solid #FBC858;*/
 }
 
 .weatherContainer {
